@@ -71,6 +71,8 @@ namespace Snake
 			{
 				food.sym = head.sym;
 				pList.Add( food );
+                food.Draw();
+
 				return true;
 			}
 			else

@@ -9,8 +9,9 @@ namespace Snake
 	class Walls
 	{
 		List<Figure> wallList;
+        Random random = new Random();
 
-		public Walls( int mapWidth, int mapHeight )
+        public Walls( int mapWidth, int mapHeight )
 		{
 			wallList = new List<Figure>();
 
@@ -45,5 +46,14 @@ namespace Snake
 				wall.Draw();
 			}
 		}
+        public void AddWall(int mapWidth, int mapHeight)
+        {
+            int x = random.Next(2, mapWidth - 4);
+            int y = random.Next(2, mapHeight - 4);
+            HorizontalLine wallNew = new HorizontalLine(x, x+1, y, '#');
+            wallNew.Draw();
+            wallList.Add(wallNew);
+
+        }
 	}
 }

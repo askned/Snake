@@ -8,11 +8,17 @@ namespace Snake
 {
 	class Program
 	{
-		static void Main( string[] args )
-		{
-			Console.SetBufferSize( 80, 25 );
+        private static int scrWaight = 80;
+        private static int scrHeight = 25;
 
-			Walls walls = new Walls( 80, 25 );
+
+        static void Main( string[] args )
+		{
+            int score = 0;
+            int sleepTime = 100;
+            Console.SetBufferSize(scrWaight, scrHeight);
+
+			Walls walls = new Walls(scrWaight, scrHeight);
 			walls.Draw();
 
 			// Отрисовка точек			
@@ -20,7 +26,7 @@ namespace Snake
 			Snake snake = new Snake( p, 4, Direction.RIGHT );
 			snake.Draw();
 
-			FoodCreator foodCreator = new FoodCreator( 80, 25, '$' );
+			FoodCreator foodCreator = new FoodCreator(scrWaight, scrHeight, '$' );
 			Point food = foodCreator.CreateFood();
 			food.Draw();
 
@@ -32,38 +38,43 @@ namespace Snake
 				}
 				if(snake.Eat( food ) )
 				{
-					food = foodCreator.CreateFood();
-					food.Draw();
-				}
+                    food.ClearFood();
+                    food = foodCreator.CreateFood();
+                  	food.Draw();
+                    sleepTime = sleepTime - 5;
+                    score = score + 10;
+                   walls.AddWall(scrWaight, scrHeight);
+                }
 				else
 				{
 					snake.Move();
 				}
 
-				Thread.Sleep( 100 );
+				Thread.Sleep(sleepTime);
 				if ( Console.KeyAvailable )
 				{
 					ConsoleKeyInfo key = Console.ReadKey();
 					snake.HandleKey( key.Key );
 				}
 			}
-			WriteGameOver();
+			WriteGameOver(score);
 			Console.ReadLine();
       }
 
 
-		static void WriteGameOver()
+		static void WriteGameOver(int score)
 		{
-			int xOffset = 25;
-			int yOffset = 8;
+			int xOffset = scrWaight / 3;
+			int yOffset = scrHeight/ 3;
 			Console.ForegroundColor = ConsoleColor.Red;
 			Console.SetCursorPosition( xOffset, yOffset++ );
 			WriteText( "============================", xOffset, yOffset++ );
 			WriteText( "И Г Р А    О К О Н Ч Е Н А", xOffset + 1, yOffset++ );
 			yOffset++;
-			WriteText( "Автор: Евгений Картавец", xOffset + 2, yOffset++ );
-			WriteText( "Специально для GeekBrains", xOffset + 1, yOffset++ );
-			WriteText( "============================", xOffset, yOffset++ );
+			WriteText( "Автор: Денис", xOffset + 1, yOffset++ );
+		
+            WriteText("Ваш рекорд = " +score, xOffset + 5, yOffset++);
+            WriteText( "============================", xOffset, yOffset++ );
 		}
 
 		static void WriteText( String text, int xOffset, int yOffset )
